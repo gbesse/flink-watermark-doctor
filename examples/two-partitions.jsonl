@@ -1,0 +1,5 @@
+{"partition":"A","ts":1}
+{"partition":"B","ts":1}
+{"partition":"A","ts":20}
+{"partition":"B","type":"idle"}
+{"partition":"A","ts":2}
