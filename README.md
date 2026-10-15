@@ -18,3 +18,19 @@ Rejouez des événements horodatés pour comprendre pourquoi une fenêtre attend
 Reproduzca eventos con marcas de tiempo para entender por qué una ventana espera o descarta un evento tardío. El archivo JSON Lines contiene `partition` y `ts`, o un evento `idle` / `resume`. Los parámetros y límites del modelo se describen arriba. Este simulador no ejecuta Flink.
 
 MIT licensed.
+
+## Partitions silencieuses / Silent partitions / Particiones silenciosas
+
+FR : Déclarez toutes les partitions attendues avec `--partition A --partition B`. Avant son premier événement, une partition active figure dans `waiting_partitions` et retient le watermark ; `idle` l’exclut, `resume` la réactive. Le watermark ne recule jamais. Sans déclaration, les partitions sont découvertes au fil du replay : une partition jamais vue ne peut pas être devinée. Les paramètres et événements sont validés avant simulation. Le modèle reste pédagogique, sans runtime Flink, alignement ni détection automatique d’inactivité.
+
+EN: Declare every expected partition with `--partition A --partition B`. Before its first event, an active partition appears in `waiting_partitions` and holds back the watermark; `idle` excludes it and `resume` reactivates it. Watermarks never regress. Without declarations, partitions are discovered during replay: an unseen partition cannot be guessed. Parameters and events are validated before simulation. This remains a teaching model, without a Flink runtime, alignment or automatic idle detection.
+
+ES: Declare todas las particiones esperadas con `--partition A --partition B`. Antes de su primer evento, una partición activa aparece en `waiting_partitions` y retiene el watermark; `idle` la excluye y `resume` la reactiva. El watermark nunca retrocede. Sin declaración, las particiones se descubren durante el replay: no se adivinan particiones nunca vistas. Se validan parámetros y eventos antes de simular. Sigue siendo un modelo didáctico, sin runtime Flink, alineación ni detección automática de inactividad.
+
+```sh
+python3 watermark_doctor.py examples/cold-partitions.jsonl --partition A --partition B --window 10 --out-of-order 0 --lang fr
+python3 watermark_doctor.py examples/cold-partitions.jsonl --partition A --partition B --window 10 --out-of-order 0 --lang en
+python3 watermark_doctor.py examples/cold-partitions.jsonl --partition A --partition B --window 10 --out-of-order 0 --lang es
+```
+
+FR : le scénario fictif produit les watermarks `null, null, 20, 20, 20, 30`. EN: the fictional scenario produces watermarks `null, null, 20, 20, 20, 30`. ES: el escenario ficticio produce watermarks `null, null, 20, 20, 20, 30`. Source : [Apache Flink — idle sources](https://nightlies.apache.org/flink/flink-docs-stable/docs/dev/datastream/event-time/generating_watermarks/#dealing-with-idle-sources).
