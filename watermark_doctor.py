@@ -118,6 +118,7 @@ def simulate(
             "partition": partition,
             "type": kind,
             "watermark_before": watermark,
+            "late_updates": [],
         }
         if kind == "idle":
             idle.add(partition)
@@ -135,6 +136,8 @@ def simulate(
             else:
                 counts[end] += 1
                 record["result"] = "late update" if end in fired else "accepted"
+                if end in fired:
+                    record["late_updates"].append({"window_end": end, "count": counts[end]})
             maxima[partition] = max(timestamp, maxima.get(partition, timestamp))
         active = [
             max_ts - out_of_order for name, max_ts in maxima.items() if name not in idle
