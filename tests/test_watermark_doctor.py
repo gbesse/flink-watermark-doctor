@@ -123,5 +123,29 @@ class ColdPartitionTests(unittest.TestCase):
             self.assertEqual(result["timeline"][0]["result"], LABELS[lang]["accepted"])
 
 
+class LateEmissionTests(unittest.TestCase):
+    def test_late_emissions_replace_full_count_and_too_late_never_emits(self):
+        for lang in ("fr", "en", "es"):
+            result = simulate([
+                {"partition":"A","ts":1},
+                {"partition":"A","ts":10},
+                {"partition":"A","ts":2},
+                {"partition":"A","ts":3},
+                {"partition":"A","ts":15},
+                {"partition":"A","ts":4},
+            ], 10, 0, 5, lang=lang)
+            rows = result["timeline"]
+            self.assertEqual(rows[1]["fired"], [{"window_end":10,"count":1}])
+            self.assertEqual(rows[2]["late_updates"], [{"window_end":10,"count":2}])
+            self.assertEqual(rows[3]["late_updates"], [{"window_end":10,"count":3}])
+            self.assertEqual(rows[2]["fired"], [])
+            self.assertEqual(rows[-1]["late_updates"], [])
+            self.assertEqual(result["windows"][0]["count"],3)
+
+    def test_update_lists_are_independent_per_step(self):
+        rows = simulate([{"partition":"A","ts":1},{"partition":"A","ts":20}],10,0,0)["timeline"]
+        rows[0]["late_updates"].append({"window_end":-1,"count":99})
+        self.assertEqual(rows[1]["late_updates"],[])
+
 if __name__ == "__main__":
     unittest.main()

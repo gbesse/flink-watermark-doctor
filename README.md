@@ -34,3 +34,10 @@ python3 watermark_doctor.py examples/cold-partitions.jsonl --partition A --parti
 ```
 
 FR : le scénario fictif produit les watermarks `null, null, 20, 20, 20, 30`. EN: the fictional scenario produces watermarks `null, null, 20, 20, 20, 30`. ES: el escenario ficticio produce watermarks `null, null, 20, 20, 20, 30`. Source : [Apache Flink — idle sources](https://nightlies.apache.org/flink/flink-docs-stable/docs/dev/datastream/event-time/generating_watermarks/#dealing-with-idle-sources).
+
+
+FR : Chaque étape expose `late_updates` : une mise à jour tardive acceptée après le premier déclenchement contient le **compte total de la fenêtre**, pas un incrément. `fired` conserve les premiers déclenchements ; un événement trop tardif n’émet aucune mise à jour. Cela permet de rejouer les sorties du modèle pédagogique sans additionner plusieurs fois les mêmes événements. Ce n’est ni un connecteur de sortie ni un émulateur Flink ; la rétention mémoire des fenêtres reste simplifiée.
+
+EN: Each step exposes `late_updates`: an accepted late update after first firing contains the **full window count**, not an increment. `fired` keeps first firings; a too-late event emits no update. This lets readers replay the teaching model’s outputs without adding the same events twice. It is neither a sink connector nor a Flink emulator; window memory retention remains simplified.
+
+ES: Cada paso incluye `late_updates`: una actualización tardía aceptada tras la primera emisión contiene el **recuento total de la ventana**, no un incremento. `fired` conserva las primeras emisiones; un evento demasiado tardío no emite actualización. Permite reproducir las salidas del modelo didáctico sin sumar varias veces los mismos eventos. No es conector de salida ni emulador Flink; la retención de ventanas sigue simplificada.
