@@ -41,3 +41,11 @@ FR : Chaque étape expose `late_updates` : une mise à jour tardive acceptée ap
 EN: Each step exposes `late_updates`: an accepted late update after first firing contains the **full window count**, not an increment. `fired` keeps first firings; a too-late event emits no update. This lets readers replay the teaching model’s outputs without adding the same events twice. It is neither a sink connector nor a Flink emulator; window memory retention remains simplified.
 
 ES: Cada paso incluye `late_updates`: una actualización tardía aceptada tras la primera emisión contiene el **recuento total de la ventana**, no un incremento. `fired` conserva las primeras emisiones; un evento demasiado tardío no emite actualización. Permite reproducir las salidas del modelo didáctico sin sumar varias veces los mismos eventos. No es conector de salida ni emulador Flink; la retención de ventanas sigue simplificada.
+
+## Diagnostic de progression / Progress diagnostics / Diagnóstico del avance
+
+FR — Chaque étape fournit les candidats par partition, les partitions limitantes (y compris les ex æquo), le motif de progression/blocage et son explication FR/EN/ES. Une partition déclarée froide bloque même si un minimum est observable ailleurs ; reprendre une ancienne partition ne recule jamais le watermark. Le modèle pédagogique ne simule pas le runtime Apache Flink.
+
+EN — Each step reports per-partition candidates, limiting partitions including ties, progress/stall reason and a localized explanation. A declared cold partition blocks even when another minimum is observable; resuming an old partition never rewinds the watermark. This teaching model does not emulate the Apache Flink runtime.
+
+ES — Cada paso expone candidatos por partición, particiones limitantes incluidos empates, motivo de avance/bloqueo y explicación localizada. Una partición declarada fría bloquea aunque exista otro mínimo; reanudar una antigua no retrasa el watermark. Este modelo didáctico no emula el runtime Apache Flink.
