@@ -148,6 +148,19 @@ def simulate(
         if active and not waiting:
             candidate = min(active)
             watermark = candidate if watermark is None else max(watermark, candidate)
+        candidates = {name: ts - out_of_order for name, ts in maxima.items() if name not in idle}
+        minimum = min(candidates.values()) if candidates else None
+        record["partition_candidates"] = dict(sorted(candidates.items()))
+        record["limiting_partitions"] = sorted(name for name, value in candidates.items() if value == minimum)
+        record["watermark_advanced"] = watermark is not None and (record["watermark_before"] is None or watermark > record["watermark_before"])
+        reason = "waiting" if waiting else "idle" if not candidates else "advanced" if record["watermark_advanced"] else "held"
+        explanations = {
+            "fr": {"waiting": "Partition déclarée sans horodatage : progression bloquée.", "idle": "Toutes les partitions connues sont inactives : watermark conservé.", "advanced": "Le minimum des partitions actives a fait progresser le watermark.", "held": "Le minimum actif ne dépasse pas le watermark conservé."},
+            "en": {"waiting": "A declared partition has no timestamp: progress is blocked.", "idle": "All known partitions are idle: watermark is retained.", "advanced": "The active-partition minimum advanced the watermark.", "held": "The active minimum does not exceed the retained watermark."},
+            "es": {"waiting": "Una partición declarada no tiene tiempo: el avance está bloqueado.", "idle": "Todas las particiones conocidas están inactivas: se conserva el watermark.", "advanced": "El mínimo de particiones activas adelantó el watermark.", "held": "El mínimo activo no supera el watermark conservado."},
+        }
+        record["progress_reason"] = reason
+        record["explanation"] = explanations[lang][reason]
         record["watermark_after"] = watermark
         record["active_partitions"] = sorted(name for name in known if name not in idle)
         record["waiting_partitions"] = waiting
