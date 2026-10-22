@@ -49,3 +49,11 @@ FR — Chaque étape fournit les candidats par partition, les partitions limitan
 EN — Each step reports per-partition candidates, limiting partitions including ties, progress/stall reason and a localized explanation. A declared cold partition blocks even when another minimum is observable; resuming an old partition never rewinds the watermark. This teaching model does not emulate the Apache Flink runtime.
 
 ES — Cada paso expone candidatos por partición, particiones limitantes incluidos empates, motivo de avance/bloqueo y explicación localizada. Una partición declarada fría bloquea aunque exista otro mínimo; reanudar una antigua no retrasa el watermark. Este modelo didáctico no emula el runtime Apache Flink.
+
+## Comparaison / Comparison / Comparación
+
+FR — Comparer plusieurs retards admis sur le même ordre d’entrée : --compare-lateness 0 --compare-lateness 5 retourne les étapes rejetées et comptes par fenêtre pour chaque politique.
+
+EN — Compare multiple allowed-lateness values on the same input order: --compare-lateness 0 --compare-lateness 5 returns dropped steps and per-window counts for each policy.
+
+ES — Comparar varios retrasos admitidos en el mismo orden de entrada: --compare-lateness 0 --compare-lateness 5 devuelve pasos descartados y conteos por ventana para cada política.

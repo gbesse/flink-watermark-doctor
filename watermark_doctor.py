@@ -181,6 +181,18 @@ def simulate(
     }
 
 
+def compare_lateness(events, window, out_of_order, lateness_values, *, partitions=None, lang="en"):
+    if (not isinstance(lateness_values,(list,tuple)) or not 1<=len(lateness_values)<=20 or any(type(v) is not int or v<0 for v in lateness_values) or len(set(lateness_values))!=len(lateness_values)):
+        raise invalid()
+    events=list(events)
+    reports=[]
+    for lateness in lateness_values:
+        result=simulate(events,window,out_of_order,lateness,partitions=partitions,lang=lang)
+        dropped=[step['step'] for step in result['timeline'] if step['result']==LABELS[lang]['too late']]
+        reports.append({'allowed_lateness':lateness,'dropped_steps':dropped,'accepted_event_count':sum(row['count'] for row in result['windows']),'windows':result['windows']})
+    return {'policies':reports,'same_input_order':True,'teaching_model_not_flink_runtime':True}
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(
         description="FR : expliquer les watermarks / EN: explain watermarks / ES: explicar watermarks"
@@ -197,6 +209,7 @@ def main(argv=None):
         help="FR : partition attendue (répéter) / EN: expected partition (repeat) / ES: partición esperada (repetir)",
     )
     parser.add_argument("--lang", choices=LABELS, default="en", help="FR / EN / ES")
+    parser.add_argument("--compare-lateness", type=int, action="append", help="FR : comparer ce retard (répéter) / EN: compare this lateness (repeat) / ES: comparar este retraso (repetir)")
     args = parser.parse_args(argv)
     try:
         result = simulate(
@@ -207,6 +220,8 @@ def main(argv=None):
             partitions=args.partition,
             lang=args.lang,
         )
+        if args.compare_lateness is not None:
+            result['lateness_comparison']=compare_lateness(load_events(args.events),args.window,args.out_of_order,args.compare_lateness,partitions=args.partition,lang=args.lang)
     except (OSError, ValueError) as error:
         parser.error(str(error))
     print(json.dumps(result, indent=2, ensure_ascii=False))
