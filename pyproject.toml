@@ -1,6 +1,6 @@
 [project]
 name = "flink-watermark-doctor"
-version = "0.3.2"
+version = "0.3.3"
 description = "Explain event-time watermark behavior with replayable fixtures"
 requires-python = ">=3.10"
 license = "MIT"

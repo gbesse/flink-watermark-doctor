@@ -57,3 +57,11 @@ FR — Comparer plusieurs retards admis sur le même ordre d’entrée : --compa
 EN — Compare multiple allowed-lateness values on the same input order: --compare-lateness 0 --compare-lateness 5 returns dropped steps and per-window counts for each policy.
 
 ES — Comparar varios retrasos admitidos en el mismo orden de entrada: --compare-lateness 0 --compare-lateness 5 devuelve pasos descartados y conteos por ventana para cada política.
+
+## JSONL contract / Contrat JSONL / Contrato JSONL
+
+FR — Les clés JSON dupliquées et constantes non finies sont refusées avant la simulation, y compris dans les objets imbriqués. Le diagnostic conserve le numéro de ligne.
+
+EN — Duplicate JSON keys and nonfinite constants are rejected before simulation, including nested objects. Diagnostics retain the line number.
+
+ES — Se rechazan claves JSON duplicadas y constantes no finitas antes de simular, incluso en objetos anidados. El diagnóstico conserva el número de línea.
