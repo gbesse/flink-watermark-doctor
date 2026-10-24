@@ -59,6 +59,18 @@ def validate_event(event):
         raise invalid()
 
 
+def _unique_object(pairs):
+    result = {}
+    for key,value in pairs:
+        if key in result: raise invalid()
+        result[key] = value
+    return result
+
+
+def _nonfinite(value):
+    raise invalid()
+
+
 def load_events(path):
     events = []
     for line_number, raw in enumerate(
@@ -67,7 +79,7 @@ def load_events(path):
         if not raw.strip():
             continue
         try:
-            event = json.loads(raw)
+            event = json.loads(raw, object_pairs_hook=_unique_object, parse_constant=_nonfinite)
             validate_event(event)
         except (json.JSONDecodeError, ValueError) as error:
             raise ValueError(f"{path}:{line_number}: {error}") from error
