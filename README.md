@@ -65,3 +65,12 @@ FR — Les clés JSON dupliquées et constantes non finies sont refusées avant 
 EN — Duplicate JSON keys and nonfinite constants are rejected before simulation, including nested objects. Diagnostics retain the line number.
 
 ES — Se rechazan claves JSON duplicadas y constantes no finitas antes de simular, incluso en objetos anidados. El diagnóstico conserva el número de línea.
+
+
+## 2026-11-05 — FR / EN / ES
+
+FR : Chaque arrivée expose `cleanup_at_watermark`, `late_budget_at_arrival` et `window_already_fired`. Budget égal à zéro signifie que la borne de nettoyage est atteinte ; avant le premier watermark le budget est inconnu. Modèle pédagogique, pas exécution Flink.
+
+EN: Each arrival exposes `cleanup_at_watermark`, `late_budget_at_arrival` and `window_already_fired`. Zero budget means cleanup boundary reached; before the first watermark budget is unknown. Teaching model, not Flink execution.
+
+ES: Cada llegada expone `cleanup_at_watermark`, `late_budget_at_arrival` y `window_already_fired`. Presupuesto cero significa alcanzar límite de limpieza; antes del primer watermark es desconocido. Modelo didáctico, no ejecución Flink.
