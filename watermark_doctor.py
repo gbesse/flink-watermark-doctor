@@ -142,7 +142,10 @@ def simulate(
             timestamp = event["ts"]
             idle.discard(partition)
             end = (timestamp // window + 1) * window
-            record.update(timestamp=timestamp, window_end=end)
+            record.update(timestamp=timestamp, window_end=end,
+                          cleanup_at_watermark=end+allowed_lateness,
+                          late_budget_at_arrival=None if watermark is None else end+allowed_lateness-watermark,
+                          window_already_fired=end in fired)
             if watermark is not None and watermark >= end + allowed_lateness:
                 record["result"] = "too late"
             else:
